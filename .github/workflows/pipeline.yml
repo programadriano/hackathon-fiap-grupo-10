@@ -6,7 +6,7 @@ name: Hackathon Pipeline
 on: 
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   Build:
