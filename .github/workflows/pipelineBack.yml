@@ -51,7 +51,7 @@ jobs:
           cat key.json | docker login -u _json_key --password-stdin '${{ vars.GOOGLE_ARTIFACT }}'
 
       - name: Build & Push Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: true
           file: ./backend/Dockerfile  
