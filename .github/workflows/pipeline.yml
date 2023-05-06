@@ -25,6 +25,26 @@ jobs:
       - name: Install Requirements
         run:  pip install flask pytest pytest-cov flask-wtf
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2  # https://github.com/actions/setup-node
+        with:
+          node-version: '18'
+
+      - name: Install Frontend Dependencies
+        run: cd frontend && npm install
+
+      - name: Build Frontend
+        run: npm run build
+      
+      # - name: Start front 
+      #   run: cd frontend
+      #       npm run build
+
+      # # se for rodar teste
+      # - name: Test Frontend
+      #   run: cd frontend 
+      #     npm test
+
     #   - name: Unit Test
     #     run: |
     #       coverage run --source=app -m pytest test.py
