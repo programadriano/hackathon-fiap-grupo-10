@@ -46,14 +46,18 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
 
       - name: Docker Login
-        run: | 
+        run:
           echo '${{ secrets.GOOGLE_CREDENTIALS }}' > key.json
           cat key.json | docker login -u _json_key --password-stdin '${{ vars.GOOGLE_ARTIFACT }}'
 
       - name: Build & Push Image
-        run: | 
-          docker build -t ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP_BACK }}:latest .
-          docker push ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP_BACK }}:latest
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          file: ./backend/Dockerfile  
+          run: 
+            docker build -t ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP }}:latest .
+            docker push ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP }}:latest
 
 #   Deploy-Homolog:
 #     needs: Build
@@ -72,8 +76,8 @@ jobs:
 #         id: homolog-deploy
 #         uses: 'google-github-actions/deploy-cloudrun@v1'  # https://github.com/marketplace/actions/deploy-to-cloud-run
 #         with:
-#           service: ${{ vars.GOOGLE_MYAPP_BACK }}-homolog
-#           image:   ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP_BACK }}:latest
+#           service: ${{ vars.GOOGLE_MYAPP }}-homolog
+#           image:   ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP }}:latest
 #           flags: '--allow-unauthenticated'
 
 #       - name: Test Homolog
@@ -96,8 +100,8 @@ jobs:
 #         id: prod-deploy
 #         uses: 'google-github-actions/deploy-cloudrun@v1'  # https://github.com/marketplace/actions/deploy-to-cloud-run
 #         with:
-#           service: ${{ vars.GOOGLE_MYAPP_BACK }}-prod
-#           image:   ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP_BACK }}:latest
+#           service: ${{ vars.GOOGLE_MYAPP }}-prod
+#           image:   ${{ vars.GOOGLE_ARTIFACT }}/${{ vars.GOOGLE_PROJECT_ID }}/${{ vars.GOOGLE_REPONAME_BACK }}/${{ vars.GOOGLE_MYAPP }}:latest
 #           flags: '--allow-unauthenticated'
 
 #       - name: Test Prod
